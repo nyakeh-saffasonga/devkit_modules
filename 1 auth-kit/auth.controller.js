@@ -23,10 +23,6 @@ const register = asyncHandler(async(req,res) =>{
 
     sendCreate(res, {user, token:signToken(User)})
 
-
-
-
-
 })
 
 const login = asyncHandler(async(req,res) =>{
