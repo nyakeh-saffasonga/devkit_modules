@@ -1,0 +1,31 @@
+{
+  "name": "devkit_modules",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "authKitTest": "re1 auth-kit/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nyakeh-saffasonga/devkit_modules.git"
+  },
+  "keywords": [],
+  "author": "Nyakeh_SaffaSonga <nsaffa682@west-mec.org> (https://github.com/nyakeh-saffasonga)",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nyakeh-saffasonga/devkit_modules/issues"
+  },
+  "homepage": "https://github.com/nyakeh-saffasonga/devkit_modules#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.12.0",
+    "morgan": "^1.12.1",
+    "nodemon": "^3.1.14",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {}
+}
