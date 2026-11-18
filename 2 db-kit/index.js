@@ -1,3 +1,5 @@
+'use strict';
+
 const mongoose = require('mongoose');
 
 let listenersAttached = false;
@@ -16,7 +18,7 @@ function attachListeners() {
 
     mongoose.connection.on('disconnected', () => {
         console.log(`mongoDB disconnected`);
-});
+    });
 }
 
 async function connect(uri, options = {}) {
@@ -24,7 +26,7 @@ async function connect(uri, options = {}) {
         throw new Error('Database connection failed: A URI string must be provided.');
     }
 
-    mongoose.set("strictQuery", true); // 
+    mongoose.set('strictQuery', true);
     attachListeners();
 
     const defaultOptions = {
@@ -47,11 +49,26 @@ function isConnected() {
     return mongoose.connection.readyState === 1;
 }
 
+// Added: Schema defaults plugin (timestamps + clean JSON id transform)
+function applySchemaDefaults(schema) {
+    schema.set('timestamps', true);
+    schema.set('toJSON', {
+        virtuals: true,
+        versionKey: false,
+        transform: (_doc, ret) => {
+            if (ret._id) {
+                ret.id = ret._id.toString();
+                delete ret._id;
+            }
+            return ret;
+        }
+    });
+    return schema;
+}
 
 class Repository {
-
     constructor(model) {
-        if (!model) throw new Error("A Mongoose model is required.");
+        if (!model) throw new Error('A Mongoose model is required.');
         this.model = model;
     }
 
@@ -61,6 +78,9 @@ class Repository {
     }
 
     async findById(id) {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error(`Invalid ID: ${id}`);
+        }
         return this.model.findById(id);
     }
 
@@ -69,13 +89,18 @@ class Repository {
     }
 
     async update(id, data) {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error(`Invalid ID: ${id}`);
+        }
         return this.model.findByIdAndUpdate(id, data, { new: true, runValidators: true });
     }
 
     async delete(id) {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw new Error(`Invalid ID: ${id}`);
+        }
         return this.model.findByIdAndDelete(id);
     }
-
 }
 
-module.exports = { connect, disconnect, isConnected, Repository };
+module.exports = { connect, disconnect, isConnected, applySchemaDefaults, Repository };
